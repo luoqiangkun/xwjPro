@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "gulp"
+    "start": "gulp",
+    "gitpush": "git push origin master"
   },
   "author": "",
   "license": "ISC",
