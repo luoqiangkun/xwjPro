@@ -5,7 +5,7 @@ var gulp = require('gulp'),
     sass = require('gulp-sass'),
     concat = require('gulp-concat'),
     rename = require("gulp-rename"),
-    babel = require("gulp-babel"); 
+    babel = require("gulp-babel");
 
 gulp.task('server', function(){//配置热更新服务器
 	connect.server({
@@ -15,8 +15,9 @@ gulp.task('server', function(){//配置热更新服务器
     });
 });
 
+
 gulp.task('html',done => {
-    gulp.src('./*.html')
+    gulp.src('dist/views/*.html')
         .pipe(connect.reload());
     done();
 });
@@ -24,7 +25,6 @@ gulp.task('html',done => {
 
 // 定义任务，打包JS文件
 gulp.task('js',done => {
-    console.log( 'js' );
     gulp.src('src/js/**/*.js')
         .pipe(babel()) 
         .pipe(concat('index.js'))
@@ -50,9 +50,9 @@ gulp.task('sass', done => {
 gulp.task('watch',done => {
     gulp.watch('src/scss/**/*.scss',gulp.series('sass'));
     gulp.watch('src/js/**/*.js',gulp.series('js'));
-    gulp.watch('./*.html',gulp.series('html'));
+    gulp.watch('dist/views/*.html',gulp.series('html'));
     done();
 });
 
 
-gulp.task('default', gulp.series('js','sass','watch','server'));
+gulp.task('default', gulp.series('js','sass','html','watch','server'));
