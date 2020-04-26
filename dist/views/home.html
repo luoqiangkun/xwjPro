@@ -29,18 +29,18 @@
     
     <div class="main absolute">
         <div class="banner">
-            <img src="/src/images/banner.png" />
+            <img src="/src/images/banner.jpg" />
         </div>
        <div class="menus">
-           <div class="menus-item">
+           <div class="menus-item" @click="storeRouterHandle" v-if="type === 1">
                <span>我的小店</span>
                <i class="turn-right"></i>
             </div>
-           <div class="menus-item">
+           <div class="menus-item" @click="incomeRouterHandle">
                <span>我的收入</span>
                <i class="turn-right"></i>
             </div>
-           <div class="menus-item">
+           <div class="menus-item" @click="taskRouterHandle" v-if="type === 1">
                <span>分销任务</span>
                <i class="turn-right"></i>
             </div>

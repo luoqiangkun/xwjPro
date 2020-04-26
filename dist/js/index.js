@@ -1,4 +1,114 @@
-'use strict';
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+//  import { Button, Cell } from 'mint-ui'   
+//  Vue.use(Button)
+//  Vue.use(Cell)
+var Directseller = function () {
+    //state  = -1; 
+    //data = {};
+    // router = {};
+    // state  = -1; 
+    function Directseller() {
+        _classCallCheck(this, Directseller);
+
+        this.state = -1;
+        this.router = {};
+        this.data = {};
+        this._data();
+        this._router();
+        this._check();
+    }
+
+    _createClass(Directseller, [{
+        key: '_data',
+        value: function _data() {
+            var _this = this;
+
+            $.request({
+                type: 'post',
+                url: ApiUrl + '/index.php?ctl=Distribution_Directseller&met=info&typ=json',
+                dataType: 'json',
+                async: false,
+                success: function success(res) {
+                    if (res.status === 200) {
+                        _this.state = res.data.directseller_enable;
+                        _this.data = res.data;
+                    }
+                }
+            });
+        }
+    }, {
+        key: '_check',
+        value: function _check() {
+            if (this.state > -1) {
+                if (this.state === 0 || this.state === 2) {
+                    if (this.router.path !== 'result') {
+                        window.location.href = '/dist/views/result.html';
+                    }
+                } else {
+                    if (this.router.path === 'result' || this.router.path === 'apply' || this.router.path === 'distributor' || this.router.path === 'sharer') {
+                        window.location.href = '/dist/views/home.html';
+                    }
+                }
+            } else {
+                if (this.router.path !== 'apply' && this.router.path !== 'distributor' && this.router.path !== 'sharer') {
+                    window.location.href = '/dist/views/apply.html';
+                }
+            }
+        }
+        // //路由相关
+
+    }, {
+        key: '_router',
+        value: function _router() {
+            var location = window.location;
+            var dir = '/dist/views/';
+            var path = void 0;
+            if (location.pathname) {
+                switch (location.pathname) {
+                    case dir + 'apply.html':
+                        path = 'apply';
+                        break;
+                    case dir + 'distributor.html':
+                        path = 'distributor';
+                        break;
+                    case dir + 'home.html':
+                        path = 'home';
+                        break;
+                    case dir + 'income.html':
+                        path = 'income';
+                        break;
+                    case dir + 'order.html':
+                        path = 'order';
+                        break;
+                    case dir + 'result.html':
+                        path = 'result';
+                        break;
+                    case dir + 'store.html':
+                        path = 'store';
+                        break;
+                    case dir + 'sharer.html':
+                        path = 'sharer';
+                        break;
+                    default:
+                        path = 'index';
+                }
+            }
+            var router = {
+                path: path,
+                href: location.search,
+                search: location.search
+            };
+            this.router = router;
+        }
+    }]);
+
+    return Directseller;
+}();
+
+var directseller = new Directseller();
 
 /* ***********用户申请开始********** */
 (function () {
@@ -57,7 +167,7 @@
                     //BMAP_STATUS_TIMEOUT   超时。对应数值“8”。(自 1.1 新增)
                 },
                 getLocateLists: function getLocateLists() {
-                    var _this = this;
+                    var _this2 = this;
 
                     var params = {
                         'location': this.location.lat + ',' + this.location.lng,
@@ -69,7 +179,7 @@
                         data: params,
                         dataType: 'json',
                         success: function success(result) {
-                            _this.addressLists = result.data.items;
+                            _this2.addressLists = result.data.items;
                         }
                     });
                 },
@@ -87,16 +197,16 @@
                         'latitude': this.location.lat,
                         'longitude': this.location.lng,
                         'address': this.addressName,
-                        'apply_type': 1
+                        'directseller_type': 1
                     };
                     $.request({
                         type: 'post',
-                        url: ApiUrl + '/index.php?ctl=Store&met=apply&typ=json',
+                        url: ApiUrl + '/index.php?ctl=Distribution_Directseller&met=apply&typ=json',
                         data: params,
                         dataType: 'json',
                         success: function success(res) {
                             if (res.status === 200) {
-                                window.location.href = '/dist/views/result.html?id=' + res.data.apply_id;
+                                //window.location.href = '/dist/views/result.html';
                             } else {
                                 $.sDialog({
                                     skin: "red",
@@ -134,16 +244,16 @@
             methods: {
                 submitHandle: function submitHandle() {
                     var params = {
-                        'apply_type': 2
+                        'directseller_type': 2
                     };
                     $.request({
                         type: 'post',
-                        url: ApiUrl + '/index.php?ctl=Store&met=apply&typ=json',
+                        url: ApiUrl + '/index.php?ctl=Distribution_Directseller&met=apply&typ=json',
                         data: params,
                         dataType: 'json',
                         success: function success(res) {
                             if (res.status === 200) {
-                                window.location.href = '/dist/views/result.html?id=' + res.data.apply_id;
+                                window.location.href = '/dist/views/result.html';
                             } else {
                                 $.sDialog({
                                     skin: "red",
@@ -174,23 +284,23 @@
             },
             methods: {
                 getData: function getData() {
-                    var _this2 = this;
+                    var _this3 = this;
 
                     $.request({
                         type: 'get',
-                        url: ApiUrl + '/index.php?ctl=Store&met=applyInfo&typ=json',
+                        url: ApiUrl + '/index.php?ctl=Distribution_Directseller&met=info&typ=json',
                         data: { apply_id: this.id },
                         dataType: 'json',
                         success: function success(res) {
-                            _this2.state = res.data.apply_state;
-                            _this2.type = res.data.apply_type;
+                            _this3.state = res.data.apply_state;
+                            _this3.type = res.data.apply_type;
                         }
                     });
                 }
             },
             created: function created() {
-                this.id = getQueryString('id');
-                this.getData();
+                this.state = directseller.state;
+                this.type = directseller.data.directseller_type;
             }
         });
     }
@@ -203,8 +313,20 @@
         var app = new Vue({
             el: '#home',
             data: {},
-            methods: {},
-            created: function created() {}
+            methods: {
+                storeRouterHandle: function storeRouterHandle() {
+                    window.location.href = '/dist/views/store.html';
+                },
+                incomeRouterHandle: function incomeRouterHandle() {
+                    window.location.href = '/dist/views/income.html';
+                },
+                taskRouterHandle: function taskRouterHandle() {
+                    window.location.href = '/dist/views/task.html';
+                }
+            },
+            created: function created() {
+                this.type = directseller.data.directseller_type;
+            }
         });
     }
 })();
@@ -216,7 +338,14 @@
         var app = new Vue({
             el: '#income',
             data: {},
-            methods: {},
+            methods: {
+                commissionRouterHandle: function commissionRouterHandle() {
+                    window.location.href = '/dist/views/commission.html';
+                },
+                orderRouterHandle: function orderRouterHandle() {
+                    window.location.href = '/dist/views/order.html';
+                }
+            },
             created: function created() {}
         });
     }

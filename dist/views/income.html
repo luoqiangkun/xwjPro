@@ -28,7 +28,7 @@
     </header>
     
     <div class="main absolute">
-        <div class="ground">
+        <div class="ground-dark">
             <div class="card">
                 <div class="card-body">
                     <div class="row">
@@ -50,11 +50,11 @@
         </div>
 
        <div class="menus pdt-60">
-           <div class="menus-item">
+           <div class="menus-item" @click="commissionRouterHandle">
                <span>佣金明细</span>
                <i class="turn-right"></i>
             </div>
-           <div class="menus-item">
+           <div class="menus-item" @click="orderRouterHandle">
                <span>订单明细</span>
                <i class="turn-right"></i>
             </div>

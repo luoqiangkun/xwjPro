@@ -1,6 +1,11 @@
-{  
-    "presets": [  
-      "es2015"
-    ],  
-    "plugins": []  
-  }  
+{
+  "presets": [
+    ["es2015", { "modules": false }]
+  ],
+  "plugins": [["component", [
+    {
+      "libraryName": "mint-ui",
+      "style": true
+    }
+  ]]]
+}

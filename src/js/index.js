@@ -1,4 +1,96 @@
 
+//  import { Button, Cell } from 'mint-ui'   
+//  Vue.use(Button)
+//  Vue.use(Cell)
+class Directseller {
+    //state  = -1; 
+    //data = {};
+    // router = {};
+    // state  = -1; 
+    constructor() {
+        this.state = -1;
+        this.router = {};
+        this.data = {};
+        this._data();
+        this._router();
+        this._check();
+    }
+    _data(){
+        $.request({
+            type:'post',
+            url: ApiUrl + '/index.php?ctl=Distribution_Directseller&met=info&typ=json',
+            dataType:'json',
+            async: false,
+            success:  (res) => {
+                if( res.status === 200 ){
+                   this.state = res.data.directseller_enable; 
+                   this.data = res.data;
+                } 
+            }
+        }); 
+    }
+    _check(){
+        if( this.state > -1 ){
+            if( this.state === 0 || this.state === 2 ){
+                if( this.router.path !== 'result' ){
+                    window.location.href = '/dist/views/result.html';
+                }
+            } else {
+                if( this.router.path === 'result' || this.router.path === 'apply' || this.router.path === 'distributor' || this.router.path === 'sharer' ){
+                    window.location.href = '/dist/views/home.html';
+                }
+            } 
+        } else {
+            if( this.router.path !== 'apply' && this.router.path !== 'distributor' && this.router.path !== 'sharer' ){
+                window.location.href = '/dist/views/apply.html';
+            }
+        }
+    }
+    // //路由相关
+    _router(){
+        const location = window.location;
+        const dir = '/dist/views/';
+        let path;
+        if( location.pathname ){
+            switch(location.pathname) {
+                case dir + 'apply.html':
+                    path = 'apply';
+                    break;
+                case dir + 'distributor.html':
+                    path = 'distributor';
+                    break;
+                case dir + 'home.html':
+                    path = 'home';
+                    break;
+                case dir + 'income.html':
+                    path = 'income';
+                    break;
+                case dir + 'order.html':
+                    path = 'order';
+                    break;
+                case dir + 'result.html':
+                    path = 'result';
+                    break;
+                case dir + 'store.html':
+                    path = 'store';
+                    break;
+                case dir + 'sharer.html':
+                    path = 'sharer';
+                    break;
+                default:
+                    path = 'index';
+            } 
+        }
+        const router = {
+            path:path,
+            href:location.search,
+            search:location.search,
+        }
+        this.router = router;
+    }
+}
+
+let directseller = new Directseller();
 
 /* ***********用户申请开始********** */
 (function () { 
@@ -65,7 +157,7 @@
                 getLocateLists(){
                     let params = {
                         'location':this.location.lat + ',' + this.location.lng,
-                        'area_name' : this.areaName
+                        'area_name' : this.areaName,
                     };
                     $.request({
                         type:'post',
@@ -92,16 +184,16 @@
                         'latitude':this.location.lat,
                         'longitude' :this.location.lng,
                         'address' : this.addressName,
-                        'apply_type' : 1
+                        'directseller_type' : 1
                     };
                     $.request({
                         type:'post',
-                        url: ApiUrl + '/index.php?ctl=Store&met=apply&typ=json',
+                        url: ApiUrl + '/index.php?ctl=Distribution_Directseller&met=apply&typ=json',
                         data:params,
                         dataType:'json',
                         success:  (res) => {
                             if( res.status === 200 ){
-                                window.location.href = '/dist/views/result.html?id=' + res.data.apply_id;
+                                //window.location.href = '/dist/views/result.html';
                             } else {
                                 $.sDialog({
                                     skin: "red",
@@ -140,16 +232,16 @@
             methods:{
                 submitHandle(){
                     let params = {
-                        'apply_type' : 2
+                        'directseller_type' : 2
                     };
                     $.request({
                         type:'post',
-                        url: ApiUrl + '/index.php?ctl=Store&met=apply&typ=json',
+                        url: ApiUrl + '/index.php?ctl=Distribution_Directseller&met=apply&typ=json',
                         data:params,
                         dataType:'json',
                         success:  (res) => {
                             if( res.status === 200 ){
-                                window.location.href = '/dist/views/result.html?id=' + res.data.apply_id;
+                                window.location.href = '/dist/views/result.html';
                             } else {
                                 $.sDialog({
                                     skin: "red",
@@ -184,7 +276,7 @@
                 getData(){
                     $.request({
                         type:'get',
-                        url: ApiUrl + '/index.php?ctl=Store&met=applyInfo&typ=json',
+                        url: ApiUrl + '/index.php?ctl=Distribution_Directseller&met=info&typ=json',
                         data:{apply_id:this.id},
                         dataType:'json',
                         success:  (res) => {
@@ -195,8 +287,8 @@
                 }
             },
             created(){
-                this.id = getQueryString('id');
-                this.getData();
+                this.state = directseller.state;
+                this.type = directseller.data.directseller_type;
             }
         })
     }
@@ -211,8 +303,18 @@
             el: '#home',
             data: {},
             methods:{
+                storeRouterHandle(){
+                    window.location.href =  '/dist/views/store.html';
+                },
+                incomeRouterHandle(){
+                    window.location.href =  '/dist/views/income.html';
+                },
+                taskRouterHandle(){
+                    window.location.href =  '/dist/views/task.html';
+                }
             },
             created(){
+                this.type = directseller.data.directseller_type;
             }
         })
     }
@@ -227,6 +329,12 @@
             el: '#income',
             data: {},
             methods:{
+                commissionRouterHandle(){
+                    window.location.href =  '/dist/views/commission.html';
+                },
+                orderRouterHandle(){
+                    window.location.href =  '/dist/views/order.html';
+                },
             },
             created(){
             }
