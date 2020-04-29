@@ -18,9 +18,10 @@
     <link rel="stylesheet" type="text/css" href="/dist/css/index.min.css">
 </head>
 <body>
-<div id="tack">
+<div id="task" v-cloak>
     <header>
         <div class="header-wrap">
+            <div class="header-l" @click="backHandle"> <i class="turn-left"></i> </div>
             <div class="header-title">
                 <h1 data-i18n="分销任务">分销任务</h1>
             </div>
@@ -32,17 +33,17 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <p>10000.00</p>
-                        <p>已收入（元）</p>
+                        <p>{{task}}</p>
+                        <p>总任务（元）</p>
                     </div>
                     <div class="row flex-row">
                         <div class="sub-row">
-                            <p>10000.00</p>
-                            <p>今日预期收入</p>
+                            <p>{{order_amount}}</p>
+                            <p>已完成任务</p>
                         </div>
                         <div class="sub-row">
-                            <p>10000.00</p>
-                            <p>本周预期收益</p>
+                            <p>{{Math.max(0,task - order_amount)}}</p>
+                            <p>待完成任务</p>
                         </div>
                     </div>
                 </div>

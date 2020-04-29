@@ -18,9 +18,10 @@
     <link rel="stylesheet" type="text/css" href="/dist/css/index.min.css">
 </head>
 <body>
-<div id="commission">
+<div id="commission" v-cloak>
     <header class="box-shadow"> 
         <div class="header-wrap">
+            <div class="header-l" @click="backHandle"> <i class="turn-left"></i> </div>
             <div class="header-title">
                 <h1 data-i18n="佣金明细">佣金明细</h1>
             </div>
@@ -30,36 +31,13 @@
     <div class="main absolute">
        <div class="scroll-wrap">
            <ul class="list-group">
-               <li class="list-item">
-                   <span> +30 </span>
-                   <span> 2020-04-24 17:32:33 </span>
-                   <span> 已发放 </span>
+               <li class="list-item" :key="index" v-for="(item,index) in orderData.items" >
+                   <span> +{{item.uo_buy_commission}} </span>
+                   <span> {{item.order_time}} </span>
+                   <span class="strong" v-if="item.uo_active === 1">已发放</span>
+                   <span v-else>待发放</span>
                </li>
-               <li class="list-item">
-                    <span> +30 </span>
-                    <span> 2020-04-24 17:32:33 </span>
-                    <span> 已发放 </span>
-                </li>
-                <li class="list-item">
-                    <span> +30 </span>
-                    <span> 2020-04-24 17:32:33 </span>
-                    <span> 已发放 </span>
-                </li>
-                <li class="list-item">
-                     <span> +30 </span>
-                     <span> 2020-04-24 17:32:33 </span>
-                     <span> 已发放 </span>
-                 </li>
-                 <li class="list-item">
-                    <span> +30 </span>
-                    <span> 2020-04-24 17:32:33 </span>
-                    <span> 已发放 </span>
-                </li>
-                <li class="list-item">
-                     <span> +30 </span>
-                     <span> 2020-04-24 17:32:33 </span>
-                     <span> 已发放 </span>
-                 </li>
+               
            </ul>
        </div>
     </div>

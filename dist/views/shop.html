@@ -1,0 +1,88 @@
+
+<!doctype html>
+<html lang="zh-CN" >
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,minimum-scale=1" />
+    <title data-i18n="分销中心">分销中心</title>
+    <link rel="stylesheet" type="text/css" href="//47.97.97.45/xwj/wap/css/base.css">
+    <link rel="stylesheet" type="text/css" href="//47.97.97.45/xwj/wap/css/main.css">
+    <link rel="stylesheet" type="text/css" href="//47.97.97.45/xwj/wap/css/sstouch_common.css">
+    <link rel="stylesheet" type="text/css" href="/dist/css/index.min.css">
+   
+</head>
+<body>
+<div id="shop" class="shop-wrap" v-cloak>    
+    <div class="main absolute" style="margin-top: 0;">
+        <div class="banner">
+            <div class="mask"></div>
+            <img :src="shopData.shop_banner ? shopData.shop_banner : 'http://47.97.97.45/xwj/wap/images/store_h_bg_02.jpg'" />
+        </div>
+
+        <div class="logo">
+            <div class="image">
+                <img :src="shopData.shop_logo" />
+            </div>
+            <dl>
+                <dt>{{shopData.shop_name}}</dt>
+                <dd class="ellipsis ellipsis-2">{{shopData.shop_description}}</dd>
+            </dl>
+        </div>
+
+        <div class="content bg-white">
+            <div class="product-wrap">
+                <div class="search-nav" style="display: none;">
+                    <div class="search-nav-item active">全部<i class="icon-drop"></i></div>
+                    <div class="search-nav-item">全部<i class="icon-drop"></i></div>
+                    <div class="search-nav-item">全部<i class="icon-drop"></i></div>
+                    <div class="search-nav-item">全部<i class="icon-drop"></i></div>
+                </div>
+    
+                <div class="scroll-wrap">
+                    <ul class="list-group">
+                        <li class="list-item" v-for="(item,index) in productLists.items">
+                            <div class="item-content" @click="productRouterHandle(item)">
+                                <div class="image">
+                                    <img :src="item.product_image" />
+                                </div>
+                                <div class="right-box">
+                                    <dl>
+                                        <dt class="ellipsis ellipsis-2">{{item.product_name}}</dt>
+                                        <dd>
+                                            {{item.product_tips}}
+                                        </dd>
+
+                                        <dd class="flex-row">
+                                            <span class="price">￥{{item.product_unit_price}}</span>
+                                            <span class="sale">{{item.analytics_row > 0 ? item.analytics_row.product_sale_num : 0}}件</span>
+                                        </dd>
+
+                                    </dl>
+                                    
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript" src="//47.97.97.45/xwj/wap/js/config.js"></script>
+<script type="text/javascript" src="//47.97.97.45/xwj/wap/js/libs/lib.min.js"></script>
+<script type="text/javascript" src="//47.97.97.45/xwj/wap/js/common.js"></script>
+<script type="text/javascript" src="//47.97.97.45/xwj/wap/js/libs/vue.min.js"></script>
+<script type="text/javascript" src="/dist/js/index.js"></script>
+
+</body>
+</html>

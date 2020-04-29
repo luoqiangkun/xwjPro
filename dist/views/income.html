@@ -18,9 +18,10 @@
     <link rel="stylesheet" type="text/css" href="/dist/css/index.min.css">
 </head>
 <body>
-<div id="income">
+<div id="income" v-cloak>
     <header>
         <div class="header-wrap">
+            <div class="header-l" @click="backHandle"> <i class="turn-left"></i> </div>
             <div class="header-title">
                 <h1 data-i18n="我的收入">我的收入</h1>
             </div>
@@ -32,16 +33,16 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <p>10000.00</p>
+                        <p>{{data.commission_amount}}</p>
                         <p>已收入（元）</p>
                     </div>
                     <div class="row flex-row">
                         <div class="sub-row">
-                            <p>10000.00</p>
+                            <p>{{data.today_commission}}</p>
                             <p>今日预期收入</p>
                         </div>
                         <div class="sub-row">
-                            <p>10000.00</p>
+                            <p>{{data.week_commission}}</p>
                             <p>本周预期收益</p>
                         </div>
                     </div>

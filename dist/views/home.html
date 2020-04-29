@@ -18,9 +18,10 @@
     <link rel="stylesheet" type="text/css" href="/dist/css/index.min.css">
 </head>
 <body>
-<div id="home">
+<div id="home" v-cloak>
     <header>
         <div class="header-wrap">
+            <div class="header-l" @click="backHandle"> <i class="turn-left"></i> </div>
             <div class="header-title">
                 <h1 data-i18n="分销中心">分销中心</h1>
             </div>

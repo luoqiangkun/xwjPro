@@ -18,9 +18,10 @@
     <link rel="stylesheet" type="text/css" href="/dist/css/index.min.css">
 </head>
 <body>
-    <div id="distributor">
+    <div id="distributor" v-cloak>
         <header>
             <div class="header-wrap">
+                <div class="header-l" @click="backHandle"> <i class="turn-left"></i> </div>
                 <div class="header-title">
                     <h1 data-i18n="申请成为分销商">申请成为分销商</h1>
                 </div>
@@ -38,11 +39,22 @@
                         <p>分销商说明：申请通过后拥有自己的分销店铺，可以分销商加的商品，同时具有推广获得佣金的资格，可以查看自己推广的消费者及对应的佣金明细及其微店商品</p>
                     </div>
                     <div class="form-wrap">
-                        <div class="label">代理区域</div>
-                        <div class="input-wrap">
-                            <input type="text" v-model="areaName"/>
-                            <button class="btn btn-primary btn--small" id="new-address-valve">定位</button>
+                        <div class="form-item">
+                            <div class="label">经销商</div>
+                            <div class="input-wrap">
+                                <input type="text" v-model="storeName"/>
+                                <button class="btn btn-primary btn--small" id="new-store-valve" @click="storeHandle">选择</button>
+                            </div>
                         </div>
+
+                        <div class="form-item">
+                            <div class="label">代理区域</div>
+                            <div class="input-wrap">
+                                <input type="text" v-model="areaName"/>
+                                <button class="btn btn-primary btn--small" id="new-address-valve">定位</button>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
                 <div class="action btn-group">
@@ -54,8 +66,8 @@
         <!--定位Begin-->
         <div id="new-address-wrapper" class="sstouch-full-mask new-address-wrapper hide">
             <div class="sstouch-full-mask-bg"></div>
-            <div class="sstouch-full-mask-block">
-                <div class="header">
+            <div class="sstouch-full-mask-block scroll bg-white">
+                <div class="header bg-white">
                     <div class="header-wrap">
                         <div class="header-l" >
                             <a href="javascript:void(0);" ref="addressHeader"> <i class="zc zc-back back"></i> </a> 
@@ -65,15 +77,18 @@
                         </div>
                     </div>
                 </div>
-                <div class="sstouch-main-layout">
-                    <div class="sstouch-inp-con">
-                      <div class="search-wrap">
+                <div class="sstouch-main-layout bg-white">
+                    <div class="sstouch-inp-con ">
+                      <div class="search-wrap bg-transitional">
                         <div class="select-box">
-                            
+                            <select class="bg-transitional">
+                                <option>上海</option>
+                                
+                            </select>
                         </div>
                         <div class="search-in">
                             <i class="icon-search"></i>
-                            <input type="text" class="bg-transitional" />
+                            <input type="text" class="bg-transitional"/>
                         </div>
                       </div>
                       <div class="map-wrap">
@@ -82,7 +97,7 @@
                       <div class="address-wrap">
                           <ul class="list-group" v-if="addressLists.length > 0">
                               <li class="list-item" :class="{ 'active': index === addressIndex}" @click="selectHandle(item,index)"  v-for="(item,index) in addressLists">
-                                  <div class="icon">></div>
+                                  <div class="icon"></div>
                                   <div class="content">
                                       <div class="title">{{item.name}}</div>
                                       <div class="address">{{item.address}}</div>
@@ -95,6 +110,101 @@
             </div>
         </div>
         <!--定位End-->
+
+        <!--店铺Begin-->
+        <div id="new-store-wrapper" class="sstouch-full-mask  hide">
+            <div class="sstouch-full-mask-bg"></div>
+            <div class="sstouch-full-mask-block scroll">
+                <div class="header box-shadow">
+                    <div class="header-wrap">
+                        <div class="header-l" >
+                            <a href="javascript:void(0);" ref="storeHeader"> <i class="turn-left"></i> </a> 
+                        </div>
+                        <div class="header-title">
+                            <h1 data-i18n="经销商">经销商</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="sstouch-main-layout">
+                    <div class="sstouch-inp-con">
+                        <div class="store-wrap bg-transitional">
+                            
+                            <div class="scroll-wrap">
+                                <ul class="list-group bg-transitional">
+                                    <li class="list-item" :key="index" v-for="(item,index) in storeLists.items">
+                                        <div class="banner">
+                                            <div class="mask"></div>
+                                            <img :src="item.store_banner ? item.store_banner : 'http://47.97.97.45/xwj/wap/images/store_h_bg_02.jpg'" />
+                                        </div>
+                                        <div class="item-content">
+                                            <div class="image">
+                                                <img :src="item.store_logo" />
+                                            </div>
+                                            <div class="right-box">
+                                                <dl>
+                                                    <dt>{{item.store_name}}</dt>
+                                                    <dd>
+                                                    共{{item.product_num}}件商品
+                                                    </dd>
+            
+                                                </dl>
+                                                <span class="btn" @click="clickHandle(item)">选择</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="product-content flex-row">
+                                            <div class="product-item" v-for="(row,key) in item.product_row" v-if="key < 3">
+                                                <img :src="row.product_image" />
+                                                <span class="price">￥{{row.product_unit_price}}</span>
+                                            </div>
+                        
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="list-item">
+                                        <div class="banner">
+                                            <div class="mask"></div>
+                                            <img src="/src/images/banner.jpg" />
+                                        </div>
+                                        <div class="item-content">
+                                            <div class="image">
+                                                <img src="/src/images/logo.jpg" />
+                                            </div>
+                                            <div class="right-box">
+                                                <dl>
+                                                    <dt class="">优衣库全国连锁店</dt>
+                                                    <dd>
+                                                    共1111件商品
+                                                    </dd>
+            
+                                                </dl>
+                                                <span class="btn">选择</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="product-content flex-row">
+                                            <div class="product-item">
+                                                <img src="https://shop.xunyoutest.com/image.php/shop/data/upload/media/store/3/image/20200107/1578391778954105.jpg!360x360.jpg" />
+                                                <span class="price">111.1￥</span>
+                                            </div>
+                                            <div class="product-item">
+                                                <img src="https://shop.xunyoutest.com/image.php/shop/data/upload/media/store/3/image/20200107/1578391778954105.jpg!360x360.jpg" />
+                                            </div>
+                                            <div class="product-item">
+                                                <img src="https://shop.xunyoutest.com/image.php/shop/data/upload/media/store/3/image/20200107/1578391778954105.jpg!360x360.jpg" />
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                </ul>
+                            </div>
+    
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--店铺End-->
     </div> 
 <script type="text/javascript" src="//47.97.97.45/xwj/wap/js/config.js"></script>
 <script type="text/javascript" src="//47.97.97.45/xwj/wap/js/libs/lib.min.js"></script>

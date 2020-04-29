@@ -18,9 +18,10 @@
     <link rel="stylesheet" type="text/css" href="/dist/css/index.min.css">
 </head>
 <body>
-<div id="order">
+<div id="order" v-cloak>
     <header class="box-shadow">
         <div class="header-wrap">
+            <div class="header-l" @click="backHandle"> <i class="turn-left"></i> </div>
             <div class="header-title">
                 <h1 data-i18n="订单明细">订单明细</h1>
             </div>
@@ -32,7 +33,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row ">
-                        <p class="strong">10000.00</p>
+                        <p class="strong">{{income}}</p>
                         <p>已收入（元）</p>
                     </div>
                 </div>
@@ -44,82 +45,100 @@
                 <div class="search-wrap">
                     <div class="search-in">
                         <i class="icon-search"></i>
-                        <input type="text" class="bg-transitional" />
-                        <button class="btn btn-danger btn--small">搜索</button>
+                        <input type="text" class="bg-transitional" v-model="orderTitle"/>
+                        <button class="btn btn-danger btn--small" @click="searchHandle">搜索</button>
                     </div>
                     <div class="search-nav">
-                        <div class="search-nav-item active">全部<i class="icon-drop"></i></div>
-                        <div class="search-nav-item">订单结算<i class="icon-drop"></i></div>
+                        <div class="search-nav-item" :class="{active:activeIndex === 0}" @click="activeIndex = 0">{{dropdownMenu[0].text}}<i class="icon-drop"></i></div>
+                        <div class="search-nav-item" :class="{active:activeIndex === 1}" @click="activeIndex = 1">{{dropdownMenu[1].text}}<i class="icon-drop"></i></div>
                         <div class="search-nav-item">
                             <span class="bg-transitional">2020-04-1 / 2020-04-31</span>
                         </div>
                     </div>
 
-                    <div class="dropdown-menu hide">
-                        <div class="dropdown-menu-item">
-                            综合排序
-                            <i class="icon-ok"></i>
+                    <div class="dropdown-menu" v-if="activeIndex === 0" @click="activeIndex = -1">
+                        <div class="dropdown-menu-item" @click="clickHandle(0,0,'全部')">
+                            全部
+                            <i class="icon-ok" v-if="dropdownMenu[0].index === 0"></i>
                         </div> 
-                        <div class="dropdown-menu-item">
-                            综合排序
+                        <div class="dropdown-menu-item" @click="clickHandle(0,1,'待付款')">
+                            待付款
+                            <i class="icon-ok" v-if="dropdownMenu[0].index === 1"></i>
                         </div> 
-                        <div class="dropdown-menu-item">
-                            综合排序
+                        <div class="dropdown-menu-item" @click="clickHandle(0,2,'已付款')">
+                            已付款
+                            <i class="icon-ok" v-if="dropdownMenu[0].index === 2"></i>
                         </div>
-                        <div class="dropdown-menu-item">
-                            综合排序
+                        <div class="dropdown-menu-item" @click="clickHandle(0,3,'已完成')">
+                            已完成
+                            <i class="icon-ok" v-if="dropdownMenu[0].index === 3"></i>
                         </div> 
                     </div>
 
-                   
+                    <div class="dropdown-menu" v-if="activeIndex === 1" @click="activeIndex = -1">
+                        <div class="dropdown-menu-item" @click="clickHandle(1,0,'全部')">
+                            全部
+                            <i class="icon-ok" v-if="dropdownMenu[1].index === 0"></i>
+                        </div> 
+                        <div class="dropdown-menu-item" @click="clickHandle(1,1,'已结算')">
+                            已结算
+                            <i class="icon-ok" v-if="dropdownMenu[1].index === 1"></i>
+                        </div> 
+                        <div class="dropdown-menu-item" @click="clickHandle(1,2,'未结算')">
+                            未结算
+                            <i class="icon-ok" v-if="dropdownMenu[1].index === 2"></i>
+                        </div>
+                         
+                    </div>
 
                 </div>
                 <div class="scroll-wrap">
                     <ul class="list-group">
-                        <li class="list-item">
+                        <li class="list-item" :key="index" v-for="(item,index) in orderData.items">
                             <div class="item-content">
                                 <div class="image">
-                                    <img src="https://shop.xunyoutest.com/image.php/shop/data/upload/media/store/3/image/20200107/1578391778954105.jpg!360x360.jpg" />
+                                    <img :src="item.item[0].product_image" />
                                 </div>
                                 <div class="right-box">
                                     <dl>
-                                        <dt class="ellipsis">雪豹全自动雨伞男个性创意雨伞折叠情缘天都可以</dt>
+                                        <dt class="ellipsis">{{item.item[0].item_name}}</dt>
                                         <dd>
-                                            店铺名称：雪豹商城
+                                            店铺名称：{{item.store_name}}
                                         </dd>
                                     </dl>
-                                    <span class="status">已结算</span>
+                                    <span class="status-success" v-if="item.uo_active === 1">已结算</span>
+                                    <span class="status-danger" v-else>未结算</span>
                                 </div>
                             </div>
                             <div class="item-grid">
                                 <div class="item-grid-cell">
                                     <div class="text">付款金额</div>
-                                    <div class="number">74.55</div>
+                                    <div class="number">{{item.order_payment_amount}}</div>
                                 </div>
                                 <div class="item-grid-cell">
-                                    <div class="text">付款金额</div>
-                                    <div class="number">74.55</div>
+                                    <div class="text">付款预估收入</div>
+                                    <div class="number">{{item.uo_buy_commission}}</div>
                                 </div>
                                 <div class="item-grid-cell">
-                                    <div class="text">付款金额</div>
-                                    <div class="number">74.55</div>
+                                    <div class="text">提成</div>
+                                    <div class="number">{{(item.uo_buy_commission/item.order_payment_amount * 100).toFixed(2)}}%</div>
                                 </div>
                                 <div class="item-grid-cell">
-                                    <div class="text">付款金额</div>
-                                    <div class="number">74.55</div>
+                                    <div class="text">结算金额</div>
+                                    <div class="number">{{item.order_payment_amount}}</div>
                                 </div>
                                 <div class="item-grid-cell">
-                                    <div class="text">付款金额</div>
-                                    <div class="number">74.55</div>
+                                    <div class="text">结算预估收入</div>
+                                    <div class="number">{{item.uo_buy_commission}}</div>
                                 </div>
                                 <div class="item-grid-cell">
-                                    <div class="text">付款金额</div>
-                                    <div class="number">74.55</div>
+                                    <div class="text">技术服务费</div>
+                                    <div class="number">--</div>
                                 </div>
                             </div>
                             <div class="item-footer">
-                                <p>2020-04-26 11:37:32付款</p>
-                                <p>2020-04-26 11:37:35结算</p>
+                                <p>{{item.order_time}}付款</p>
+                                <p>{{item.order_time}}结算</p>
                             </div>
                         </li>
                         
